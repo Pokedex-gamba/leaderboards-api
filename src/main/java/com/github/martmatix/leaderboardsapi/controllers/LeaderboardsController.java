@@ -8,6 +8,11 @@ import com.github.martmatix.leaderboardsapi.services.KeyLoaderService;
 import com.github.martmatix.leaderboardsapi.services.LeaderboardsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +38,11 @@ public class LeaderboardsController {
 
     private LeaderboardsService leaderboardsService;
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(example = "[{\"name\": \"...\", \n\"score\":0}]")))
+    })
     @GetMapping("/pokemon/leaderboards/getLeaderboards")
     public ResponseEntity<?> getLeaderboards(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestParam(value = "count", required = false) String count) {
         String userId = getUserIdFromToken(authHeader);
@@ -69,6 +79,13 @@ public class LeaderboardsController {
         return ResponseEntity.ok(list.subList(0, Integer.parseInt(count)));
     }
 
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = InventoryResponse.class))))
+            }
+    )
     @GetMapping("/pokemon/leaderboards/getUserInventory")
     public ResponseEntity<?> getUserInventory(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestParam(value = "userId", required = false) String requestedUserId) {
         String userId = getUserIdFromToken(authHeader);

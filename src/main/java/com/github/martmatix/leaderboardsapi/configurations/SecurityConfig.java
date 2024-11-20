@@ -23,6 +23,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/pokemon/leaderboards/getLeaderboards").hasAuthority("svc::trading_api::route::/pokemon/getLeaderboards")
                         .requestMatchers("/pokemon/leaderboards/getUserInventory").hasAuthority("svc::trading_api::route::/pokemon/getUserInventory")
+                        .requestMatchers("/docs","/v3/api-docs").permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
