@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  leaderboards-api:
+    image: ghcr.io/pokedex-gamba/leaderboards-api:latest
+    ports:
+      - "8891:80"
+    environment:
+      - INVENTORY_API_URL=http://host.docker.internal:8890
+    volumes:
+      - ./decoding_key:/decoding_key
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
