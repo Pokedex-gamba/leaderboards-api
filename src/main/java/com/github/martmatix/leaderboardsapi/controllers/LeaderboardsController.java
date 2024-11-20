@@ -69,6 +69,25 @@ public class LeaderboardsController {
         return ResponseEntity.ok(list.subList(0, Integer.parseInt(count)));
     }
 
+    @GetMapping("/pokemon/leaderboards/getUserInventory")
+    public ResponseEntity<?> getUserInventory(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestParam(value = "userId", required = false) String requestedUserId) {
+        String userId = getUserIdFromToken(authHeader);
+        if (userId.equals(ErrorCodes.TOKEN_EXTRACTION_ERROR.getCode())) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Unable To Process Request: " + ErrorCodes.TOKEN_EXTRACTION_ERROR.getCode() + "\"}");
+        }
+        if (userId.equals(ErrorCodes.PUBLIC_NOT_FOUND.getCode())) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Unable To Process Request: " + ErrorCodes.PUBLIC_NOT_FOUND.getCode() + "\"}");
+        }
+
+        String inventory;
+        if (requestedUserId == null) {
+            inventory = leaderboardsService.retrieveUserInventory(authHeader).bodyToMono(String.class).block();
+            return ResponseEntity.ok(inventory);
+        }
+        inventory = leaderboardsService.retrieveUserInventory(authHeader, requestedUserId).bodyToMono(String.class).block();
+        return ResponseEntity.ok(inventory);
+    }
+
     private String getUserIdFromToken(String authHeader) {
         String token = authHeader.replace("Bearer", "").trim();
 
