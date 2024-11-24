@@ -21,8 +21,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtDecoder jwtDecoder) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/pokemon/leaderboards/getLeaderboards").hasAuthority("svc::trading_api::route::/pokemon/getLeaderboards")
-                        .requestMatchers("/pokemon/leaderboards/getUserInventory").hasAuthority("svc::trading_api::route::/pokemon/getUserInventory")
+                        .requestMatchers("/pokemon/leaderboards/getLeaderboards").hasAuthority("svc::leaderboards_api::route::/pokemon/getLeaderboards")
+                        .requestMatchers("/pokemon/leaderboards/getUserInventory").hasAuthority("svc::leaderboards::route::/pokemon/getUserInventory")
                         .requestMatchers("/docs","/v3/api-docs").permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
